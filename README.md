@@ -6,24 +6,27 @@ in a directory based on simple criteria. Unlike `find`, however, the user
 searching the files does not need shell access to the server where files are
 stored.
 
-Searchable Files is broken up into several distinct components:
+Searchable Files is broken up into four main components:
 
-- The Extractor (`src/extractor.py`)
+- the **Extractor** (`src/extractor.py`)
 
 Parses file metadata and contents into chunks, labeled either as public or private.
 By default, this parses content in `data/files` and outputs to
 `output/extracted/`.
 
-- The Assembler (`src/assembler.py`)
+- the **Assembler** (`src/assembler.py`)
 
 Given the parsed data, combine it with extra information about visibility
-to produce valid documents for Ingest into Globus Search.
+to produce ingest documents for Globus Search. An ingest document is data
+formatted for submission to Globus Search, containing searchable data and
+visibility information for who is allowed to search on and view different parts
+of the data.
 
 By default, this reads data from `output/extracted/`, takes visibility
 information from `data/visibility.yaml`, and adds additional annotations from
 `data/annotate.yaml`. It outputs to `output/assembled/`.
 
-- The Submitter (`src/submit.py`)
+- the **Submitter** (`src/submit.py`)
 
 Given a set of ingest documents, valid for Globus Search, this sends the data
 to the Search service.
@@ -31,7 +34,7 @@ to the Search service.
 By default, this reads data from `output/assembled/` and writes information to
 `output/task_submit/`.
 
-- The Watcher (`src/watcher.py`)
+- the **Watcher** (`src/watcher.py`)
 
 Given a set of tasks in Globus Search, this monitors those tasks and waits for
 completion or failure.
@@ -119,7 +122,7 @@ You can instead run
     ./searchable-files all-parts
 
 These are equivalent. Note that `all-parts` does not take any options, and
-there cannot be customized in the ways that these other commands can be.
+therefore cannot be customized in all the ways that these other commands can be.
 
 ### Querying Results
 
