@@ -8,13 +8,13 @@ stored.
 
 Searchable Files is broken up into four main components:
 
-- the **Extractor** (`src/extractor.py`)
+- the **Extractor** (`src/searchable_files/extractor.py`)
 
 Parses file metadata and contents into chunks, labeled either as public or private.
 By default, this parses content in `data/files` and outputs to
 `output/extracted/`.
 
-- the **Assembler** (`src/assembler.py`)
+- the **Assembler** (`sr/searchable_filesc/assembler.py`)
 
 Given the parsed data, combine it with extra information about visibility
 to produce ingest documents for Globus Search. An ingest document is data
@@ -26,7 +26,7 @@ By default, this reads data from `output/extracted/`, takes visibility
 information from `data/visibility.yaml`, and adds additional annotations from
 `data/annotate.yaml`. It outputs to `output/assembled/`.
 
-- the **Submitter** (`src/submit.py`)
+- the **Submitter** (`src/searchable_files/submit.py`)
 
 Given a set of ingest documents, valid for Globus Search, this sends the data
 to the Search service.
@@ -34,7 +34,7 @@ to the Search service.
 By default, this reads data from `output/assembled/` and writes information to
 `output/task_submit/`.
 
-- the **Watcher** (`src/watcher.py`)
+- the **Watcher** (`src/searchable_files/watcher.py`)
 
 Given a set of tasks in Globus Search, this monitors those tasks and waits for
 completion or failure.

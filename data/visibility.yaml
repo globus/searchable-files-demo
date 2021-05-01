@@ -1,0 +1,6 @@
+---
+default_visibility: public
+field_restrictions:
+  head: '{current_user}'
+file_restrictions:
+  dir1/file1.txt: '{current_user}'

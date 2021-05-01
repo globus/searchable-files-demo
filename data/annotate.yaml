@@ -1,0 +1,5 @@
+---
+file_specific_annotations:
+  dir1/globus-logo.png:
+    is_globus_related: true
+    is_curated_data: true
