@@ -1,0 +1,9 @@
+# the output dir is all ephemeral
+/output/
+
+# python and setup related files
+*.pyc
+/.venv
+/build
+*.egg-info
+/searchable-files
