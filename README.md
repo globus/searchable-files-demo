@@ -43,11 +43,9 @@ By default, this reads data from `output/assembled/` and writes information to
 Given a set of tasks in Globus Search, this monitors those tasks and waits for
 completion or failure.
 
-By default, this reads task IDs from `output/task_submit/` and writes detailed
-information to `output/task_watch/`, including a summary in
-`output/task_watch/summary`.
-
-When run interactively, the Watcher also prints a progress bar in the terminal.
+By default, this reads task IDs from `output/task_submit/` and monitors those
+tasks to ensure they succeeded. It outputs the number of passing and failing
+tasks (or only success if no tasks fail) and shows a progress bar.
 
 ## Prerequisites
 
