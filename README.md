@@ -102,7 +102,7 @@ You can also run
 
 to get info about your index.
 
-### Running the Flow
+### Running the Workflow
 
 Each component of the Searchable Files App is run with a separate
 subcommand, and each one supports a `--help` option for full details on its
