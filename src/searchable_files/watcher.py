@@ -18,7 +18,13 @@ def wait(client, task_id, max_wait):
         time.sleep(1)
 
 
-@click.command("watch")
+@click.command(
+    "watch",
+    short_help="Wait for tasks to complete",
+    help="Wait for tasks to complete, and print information about the "
+    "number which succeed or fail. If a task takes too long, it is treated "
+    "as a failure.",
+)
 @click.option(
     "--task-id-file",
     default="output/task_submit/tasks.txt",

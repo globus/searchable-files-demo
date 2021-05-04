@@ -5,7 +5,12 @@ import click
 from ._common import common_options, search_client, token_storage_adapter
 
 
-@click.command("create-index")
+@click.command(
+    "create-index",
+    short_help="Create the Index for Searchable Files",
+    help="Create the Index for Searchable Files. It will be owned "
+    "by the current user.",
+)
 @common_options
 def create_index():
     adapter = token_storage_adapter()
@@ -25,7 +30,12 @@ def create_index():
     click.echo(f"successfully created index, id='{index_id}'")
 
 
-@click.command("show-index")
+@click.command(
+    "show-index",
+    short_help="Show index info",
+    help="Show detailed info about the Searchable Files index. "
+    "Must run after create-index",
+)
 @common_options
 def show_index():
     adapter = token_storage_adapter()

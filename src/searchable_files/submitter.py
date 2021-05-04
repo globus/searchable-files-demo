@@ -14,7 +14,13 @@ def submit_doc(client, index_id, filename, task_list_file):
         fp.write(res["task_id"] + "\n")
 
 
-@click.command("submit")
+@click.command(
+    "submit",
+    short_help="Submit Ingest documents as new Tasks",
+    help="Reading Ingest documents produced by the Assembler, submit them "
+    "each as a new Task and log their task IDs. "
+    "These tasks can then be monitored with the `watch` command.",
+)
 @click.option(
     "--directory",
     default="output/assembled",

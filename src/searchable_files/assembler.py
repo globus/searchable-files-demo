@@ -95,7 +95,14 @@ def _load_settings_callback(ctx, param, value):
             return Settings(yaml.load(fp))
 
 
-@click.command("assemble")
+@click.command(
+    "assemble",
+    short_help="Annotate data and prepare it for ingest",
+    help="Given data from the Extractor, notate it and convert it into "
+    "Ingest format. This will pull in data from the assembler configuration "
+    "and use it to populate `visible_to` (see docs.globus.org/api/search for "
+    "details on `visible_to`) and add fields to documents.",
+)
 @click.option(
     "--directory",
     default="output/extracted",

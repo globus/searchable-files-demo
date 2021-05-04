@@ -79,7 +79,13 @@ def _load_settings_callback(ctx, param, value):
             return Settings(yaml.load(fp))
 
 
-@click.command("extract")
+@click.command(
+    "extract",
+    short_help="Extract metadata from a directory",
+    help="Extract per-file metadata from a directory of files. "
+    "Stat data like mode and mtime, the first 100 characters, and the "
+    "detected filetype are all used",
+)
 @click.option(
     "--directory",
     default="data/files",
