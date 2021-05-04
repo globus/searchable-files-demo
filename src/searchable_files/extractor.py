@@ -96,15 +96,23 @@ def _load_settings_callback(ctx, param, value):
 @click.option(
     "--settings",
     default="data/config/extractor.yaml",
+    show_default=True,
     callback=_load_settings_callback,
     help="YAML file with configuration for the extractor",
 )
 @common_options
 def extract_cli(settings, directory, output):
-    for filename in all_filenames(directory):
+    old_cwd = os.getcwd()
+    os.chdir(directory)
+
+    rendered_data = {}
+    for filename in all_filenames("."):
+        rendered_data[filename] = filename2dict(filename, settings)
+
+    os.chdir(old_cwd)
+    for filename, data in rendered_data.items():
         with open(target_file(output, filename), "w") as fp:
-            json.dump(filename2dict(filename, settings), fp)
+            json.dump(data, fp)
 
-
-if __name__ == "__main__":
-    extract_cli()
+    click.echo("metadata extraction complete")
+    click.echo(f"results visible in\n  {output}")

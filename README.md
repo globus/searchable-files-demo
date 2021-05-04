@@ -11,6 +11,7 @@ Searchable Files is broken up into four main components:
 - the **Extractor** (`src/searchable_files/extractor.py`)
 
 Parses file metadata and contents into chunks, labeled either as public or private.
+
 By default, this parses content in `data/files` and outputs to
 `output/extracted/`.
 
@@ -22,9 +23,12 @@ formatted for submission to Globus Search, containing searchable data and
 visibility information for who is allowed to search on and view different parts
 of the data.
 
-By default, this reads data from `output/extracted/`, takes visibility
-information from `data/visibility.yaml`, and adds additional annotations from
-`settings/assembler.yaml`. It outputs to `output/assembled/`.
+The visiibility data and additional annotations used to augment the data from
+the Extractor is loaded from configuration data. By default, this is
+`data/config/assembler.yaml`.
+
+By default, this reads data from `output/extracted/`, and outputs to
+`output/assembled/`.
 
 - the **Submitter** (`src/searchable_files/submit.py`)
 
@@ -69,6 +73,10 @@ It will also create a script named `searchable-files`.
 
 After installation, you can use the `searchable-files` script.
 
+> **WARNING**: Always run `searchable-files` from the top level of the
+> repository, unless you pass additional options. Its defaults are all written
+> as relative paths with respect to this directory.
+
 ### Setup
 
 Before running any of the steps, you must run
@@ -76,14 +84,14 @@ Before running any of the steps, you must run
     ./searchable-files login
 
 This will log you in to Globus and write your credentials to
-`~/.globus-searchable-files-demo/creds.json`.
+`~/.globus_searchable_files.db`.
 
 After login, run
 
     ./searchable-files create-index
 
 This will create a new index for you to use Searchable Files.
-Its index ID will be written to `~/.globus-searchable-files-demo/index_id`.
+Its index ID will be stored in `~/.globus_searchable_files.db`.
 
 Running `./searchable-files create-index` a second time will print a message
 stating that the index already exists and giving you the index ID.
@@ -94,10 +102,10 @@ You can also run
 
 to get info about your index.
 
-### Running Parts
+### Running the Flow
 
-Each component of the Searchable Files App can be run with a separate
-subcommand, and each one supports a `--help` option for full details on their
+Each component of the Searchable Files App is run with a separate
+subcommand, and each one supports a `--help` option for full details on its
 usage.
 
     ./searchable-files extract --help
@@ -107,22 +115,6 @@ usage.
 
 The order of these commands matters, as each command's output is the input to
 the next command.
-
-### Running the full flow at once
-
-If you wish to run the equivalent of
-
-    ./searchable-files extract
-    ./searchable-files assemble
-    ./searchable-files submit
-    ./searchable-files watch
-
-You can instead run
-
-    ./searchable-files all-parts
-
-These are equivalent. Note that `all-parts` does not take any options, and
-therefore cannot be customized in all the ways that these other commands can be.
 
 ### Querying Results
 
@@ -182,19 +174,43 @@ its supported methods and features.
 This demo application is intentionally segmented into parts which you can
 customize or replace to meet your needs.
 
+#### Setup
+
+The `login` and `create-index` commands create and store data in a sqlite
+database at `~/.globus_searchable_files.db`.
+If you wish to use an alternative index ID, be aware that several commands
+rely on data stored in this database.
+
+#### Extractor
+
 The Extractor examines a source for raw metadata and pulls out features which
 it recognizes. In the simplest case, just pass the `--directory` option to read
-a different source directory with the existing extractor.
+a different source directory with the existing extractor. This can be run on
+any directory without any special considerations.
+
+#### Assembler
 
 The Assembler takes the raw data from the Extractor and annotates it with
-additional information from a secondary source. In the sample extractor,
+additional information from a secondary source. In the provided Assembler,
 annotations are stored in some simple YAML files, but annotations could just as
-easily come from a database, external API calls, or any other source. A
-replacement Assembler still needs to incorporate that information with the
-Extractor's data to produce valid documents for Globus Search.
+easily come from a database, external API calls, or any other source.
+
+A replacement Assembler still needs to incorporate that information with the
+Extractor's data to produce valid documents for Globus Search. Note that the
+Assembler included in the Searchable Files demo has special handling for the
+string `"{current_user}"` in order to resolve this to the logged-in user's
+primary identity ID. A custom Assembler could replicate this functionality
+(requiring login) or omit support for this usage.
+
+#### Submitter and Watcher
 
 The Submitter and Watcher can be applied to any directory full of Globus Search
 ingest documents (the format of data produced by the Assembler). Although you
 may want to modify them to alter their outputs, combine them into a single
 command, or make other minor changes, their main logic should probably be
 left unmodified.
+
+The only special consideration when modifying these components is that the use
+the Index ID retrieved from `create-index`. If modifying or replacing these
+commands, it may be necessary to replace the logic which loads the `index_id`
+from storage.

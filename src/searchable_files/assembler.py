@@ -15,21 +15,29 @@ def _current_user_as_urn():
     return f"urn:globus:auth:identity:{_current_user_as_urn.identity_id}"
 
 
-def _render_visibility(value):
-    if value == "public":
-        return value
+def _render_visibility(value, listify=True):
+    if isinstance(value, list):
+        return [_render_visibility(v, listify=False) for v in value]
+
+    ret = value
     if value == "{current_user}":
-        return _current_user_as_urn()
-    return value
+        ret = _current_user_as_urn()
+
+    if isinstance(ret, list):
+        return ret
+    return [ret]
 
 
 def build_entries(datafile, settings):
     # read data
     with open(datafile) as fp:
         data = json.load(fp)
+
+    full_filename = data["relpath"]
+
     # if there are annotations to add, do so
-    if data["relpath"] in settings.file_specific_annotations:
-        data.update(settings.file_specific_annotations[data["relpath"]])
+    if full_filename in settings.file_specific_annotations:
+        data.update(settings.file_specific_annotations[full_filename])
 
     non_default_entries, non_default_fields = [], []
     for part in settings.doc_parts:
@@ -40,16 +48,22 @@ def build_entries(datafile, settings):
     default_entry_data = {k: v for k, v in data.items() if k not in non_default_fields}
 
     default_visibility = settings.default_visibility
-    if data["relpath"] in settings.file_restrictions:
-        default_visibility = settings.file_restrictions[data["relpath"]]
+    if full_filename in settings.file_restrictions:
+        default_visibility = settings.file_restrictions[full_filename]
 
     return [
         {
+            "subject": full_filename,
             "visible_to": _render_visibility(default_visibility),
             "content": default_entry_data,
         }
     ] + [
-        {"visible_to": _render_visibility(vis), "content": fields, "entry_id": eid}
+        {
+            "subject": full_filename,
+            "visible_to": _render_visibility(vis),
+            "content": fields,
+            "id": eid,
+        }
         for vis, fields, eid in non_default_entries
     ]
 
@@ -98,6 +112,7 @@ def _load_settings_callback(ctx, param, value):
 @click.option(
     "--settings",
     default="data/config/assembler.yaml",
+    show_default=True,
     callback=_load_settings_callback,
     help="YAML file with configuration for the assembler",
 )
@@ -117,6 +132,5 @@ def assemble_cli(settings, directory, output):
         batch.append(entry)
     flush_batch(batch, current_doc_id, output)
 
-
-if __name__ == "__main__":
-    assemble_cli()
+    click.echo("ingest document assembly complete")
+    click.echo(f"results visible in\n  {output}")

@@ -20,7 +20,7 @@ def common_options(f):
 def all_filenames(directory):
     for dirpath, _dirnames, filenames in os.walk(directory):
         for f in filenames:
-            yield os.path.join(dirpath, f)
+            yield os.path.relpath(os.path.join(dirpath, f))
 
 
 def internal_auth_client():

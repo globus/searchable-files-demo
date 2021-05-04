@@ -8,7 +8,7 @@ max_batch_size: 100
 # annotations which are added to specific files (there are no defaults for
 # these values)
 file_specific_annotations:
-  data/files/dir1/globus-logo.png:
+  dir1/globus-logo.png:
     is_globus_related: true
     is_curated_data: true
 
@@ -28,7 +28,7 @@ file_specific_annotations:
 visibility:
   default_visibility: public
   file_restrictions:
-    data/files/dir1/file1.txt: '{current_user}'
+    dir1/file1.txt: '{current_user}'
   doc_parts:
     - id: head_and_mode
       visibility: '{current_user}'

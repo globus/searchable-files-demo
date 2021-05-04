@@ -8,6 +8,7 @@ from ._common import (
     AUTH_RESOURCE_SERVER,
     SEARCH_ALL_SCOPE,
     SEARCH_RESOURCE_SERVER,
+    common_options,
     internal_auth_client,
     token_storage_adapter,
 )
@@ -45,6 +46,7 @@ def _revoke_current_tokens(native_client):
 @click.option(
     "--force", is_flag=True, help="Do a fresh login, ignoring any existing credentials"
 )
+@common_options
 def login(force):
     # if not forcing, stop if user already logged in
     if not force and _check_logged_in():
@@ -103,6 +105,7 @@ You have successfully logged in to Searchable Files
     prompt="Are you sure you want to logout?",
     help='Automatically say "yes" to all prompts',
 )
+@common_options
 def logout():
     native_client = internal_auth_client()
     adapter = token_storage_adapter()
