@@ -8,7 +8,7 @@ import click
 import ruamel.yaml
 from identify import identify
 
-from ._common import common_options
+from ._common import all_filenames, common_options
 
 yaml = ruamel.yaml.YAML(typ="safe")
 
@@ -59,12 +59,6 @@ def filename2dict(filename, settings):
     }
 
 
-def all_filenames(directory):
-    for dirpath, _dirnames, filenames in os.walk(directory):
-        for f in filenames:
-            yield os.path.join(dirpath, f)
-
-
 def target_file(output_directory, filename):
     hashed_name = hashlib.sha256(filename.encode("utf-8")).hexdigest()
     os.makedirs(output_directory, exist_ok=True)
@@ -101,7 +95,7 @@ def _load_settings_callback(ctx, param, value):
 )
 @click.option(
     "--settings",
-    default="data/extraction.yaml",
+    default="data/config/extractor.yaml",
     callback=_load_settings_callback,
     help="YAML file with configuration for the extractor",
 )
@@ -110,3 +104,7 @@ def extract_cli(settings, directory, output):
     for filename in all_filenames(directory):
         with open(target_file(output, filename), "w") as fp:
             json.dump(filename2dict(filename, settings), fp)
+
+
+if __name__ == "__main__":
+    extract_cli()

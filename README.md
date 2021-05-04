@@ -24,7 +24,7 @@ of the data.
 
 By default, this reads data from `output/extracted/`, takes visibility
 information from `data/visibility.yaml`, and adds additional annotations from
-`data/annotate.yaml`. It outputs to `output/assembled/`.
+`settings/assembler.yaml`. It outputs to `output/assembled/`.
 
 - the **Submitter** (`src/searchable_files/submit.py`)
 

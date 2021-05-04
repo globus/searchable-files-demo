@@ -1,6 +1,7 @@
 import click
 
 from ._common import common_options
+from .assembler import assemble_cli
 from .extractor import extract_cli
 
 
@@ -11,3 +12,4 @@ def main():
 
 
 main.add_command(extract_cli)
+main.add_command(assemble_cli)

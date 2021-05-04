@@ -8,7 +8,7 @@ read_head:
   #   head: null
   #
   # this avoids attempting to read non-text data from images and other
-  # filetypes
+  # binary filetypes
   files:
     - "*.txt"
     - "*.sh"
