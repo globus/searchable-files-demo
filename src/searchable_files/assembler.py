@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 
 import click
 import ruamel.yaml
@@ -103,6 +104,12 @@ def _load_settings_callback(ctx, param, value):
     "containing extracted metadata for processing",
 )
 @click.option(
+    "--clean",
+    default=False,
+    is_flag=True,
+    help="Empty the output directory before writing any data there",
+)
+@click.option(
     "--output",
     default="output/assembled",
     show_default=True,
@@ -117,7 +124,10 @@ def _load_settings_callback(ctx, param, value):
     help="YAML file with configuration for the assembler",
 )
 @common_options
-def assemble_cli(settings, directory, output):
+def assemble_cli(settings, directory, output, clean):
+    if clean:
+        shutil.rmtree(output, ignore_errors=True)
+
     entry_docs = []
     for filename in all_filenames(directory):
         entry_docs.extend(build_entries(filename, settings))

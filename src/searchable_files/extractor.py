@@ -3,6 +3,7 @@ import fnmatch
 import hashlib
 import json
 import os
+import shutil
 
 import click
 import ruamel.yaml
@@ -87,6 +88,12 @@ def _load_settings_callback(ctx, param, value):
     "containing data files from which to extract metadata",
 )
 @click.option(
+    "--clean",
+    default=False,
+    is_flag=True,
+    help="Empty the output directory before writing any data there",
+)
+@click.option(
     "--output",
     default="output/extracted",
     show_default=True,
@@ -101,7 +108,10 @@ def _load_settings_callback(ctx, param, value):
     help="YAML file with configuration for the extractor",
 )
 @common_options
-def extract_cli(settings, directory, output):
+def extract_cli(settings, directory, output, clean):
+    if clean:
+        shutil.rmtree(output, ignore_errors=True)
+
     old_cwd = os.getcwd()
     os.chdir(directory)
 

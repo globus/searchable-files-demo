@@ -3,7 +3,7 @@
 
 # batch size determines the number of distinct documents which will be
 # combined into a single ingest document
-max_batch_size: 100
+max_batch_size: 10
 
 # annotations which are added to specific files (there are no defaults for
 # these values)
