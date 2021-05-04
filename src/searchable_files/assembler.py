@@ -4,17 +4,22 @@ import os
 import click
 import ruamel.yaml
 
-from ._common import all_filenames, common_options
+from ._common import all_filenames, auth_client, common_options
 
 yaml = ruamel.yaml.YAML(typ="safe")
+
+
+def _current_user_as_urn():
+    if not hasattr(_current_user_as_urn, "identity_id"):
+        _current_user_as_urn.identity_id = auth_client().oauth2_userinfo()["sub"]
+    return f"urn:globus:auth:identity:{_current_user_as_urn.identity_id}"
 
 
 def _render_visibility(value):
     if value == "public":
         return value
     if value == "{current_user}":
-        # raise ValueError("TODO")
-        return "foo-bar"
+        return _current_user_as_urn()
     return value
 
 
