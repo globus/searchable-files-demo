@@ -127,21 +127,39 @@ for more details.
 
 You can filter in various ways using this. For example
 
-    ./searchable-files query "foo" --types=txt,png
+    ./searchable-files query "foo" --types-or=text,png
 
 will submit a query which matches `"foo"` and requires that the files matched
 have either the `txt` or `png` type.
 
-You can test the difference between a query as your current user and an
-unauthenticated query by adding `--no-auth`, as in
 
-    ./searchable-files query --no-auth "bar"
+    ./searchable-files query "foo" --types=text,non-executable
 
-You will see that unauthenticated queries can only see data marked as
-"public".
+will find results which are both text files and not executable.
+
+#### Testing Unauthenticated Queries
+
+By default, queries are made authenticated as the logged-in user. For
+comparison, the query command supports a `--no-auth` flag, which will make the
+query submitted unauthenticated.
+
+This will result in any results which are only visible due to `visible_to`
+filtering disappearing from the results. Only "public" results will remain
+visible.
+
+On the example data, you should see a difference between
+
+    ./searchable-files '*' --extensions=sh
+
+and
+
+    ./searchable-files '*' --extensions=sh --no-auth
+
+#### Dumping the Query
 
 Finally, if you want to inspect the query which the `searchable-files` command
-is generating, you can use `--dump-query` to write the query to a file, as in
+is generating instead of submitting it to the Search service, you can use
+`--dump-query` to write the query to a file, as in
 
     ./searchable-files query "foo" --types=tar --dump-query test-query-1.json
 

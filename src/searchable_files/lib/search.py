@@ -5,19 +5,16 @@ from .auth import internal_auth_client, token_storage_adapter
 SEARCH_RESOURCE_SERVER = "search.api.globus.org"
 
 
-def search_client():
+def search_client(authenticated=True):
     storage_adapter = token_storage_adapter()
-    maybe_existing = storage_adapter.read_as_dict()
-
-    refresh_token, access_token, access_token_expires = None, None, None
-    if maybe_existing is not None and SEARCH_RESOURCE_SERVER in maybe_existing:
-        searchdata = maybe_existing[SEARCH_RESOURCE_SERVER]
-        access_token = searchdata["access_token"]
-        refresh_token = searchdata["refresh_token"]
-        access_token_expires = searchdata["expires_at_seconds"]
+    as_dict = storage_adapter.read_as_dict()
 
     authorizer = None
-    if access_token_expires is not None:
+    if authenticated:
+        authdata = as_dict[SEARCH_RESOURCE_SERVER]
+        access_token = authdata["access_token"]
+        refresh_token = authdata["refresh_token"]
+        access_token_expires = authdata["expires_at_seconds"]
         authorizer = globus_sdk.RefreshTokenAuthorizer(
             refresh_token,
             internal_auth_client(),

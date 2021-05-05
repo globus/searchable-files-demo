@@ -7,6 +7,7 @@ from .assembler import assemble_cli
 from .extractor import extract_cli
 from .lib import APP_SCOPES, common_options, internal_auth_client, token_storage_adapter
 from .manage_index import create_index, show_index
+from .query import query_cli
 from .submitter import submit_cli
 from .watcher import watch_cli
 
@@ -25,6 +26,8 @@ cli.add_command(extract_cli)
 cli.add_command(assemble_cli)
 cli.add_command(submit_cli)
 cli.add_command(watch_cli)
+# query results
+cli.add_command(query_cli)
 
 
 def _check_logged_in():
