@@ -50,7 +50,8 @@ from .lib import common_options, search_client, token_storage_adapter
 )
 @click.option(
     "--dump-query",
-    help="Write the query structure to a file instead of submitting it to the service",
+    is_flag=True,
+    help="Write the query structure to stdout instead of submitting it to the service",
 )
 def query_cli(
     query_string,
@@ -81,9 +82,7 @@ def query_cli(
         query_obj.add_filter("extension", extensions.split(","), type="match_any")
 
     if dump_query:
-        with open(dump_query, "w") as fp:
-            json.dump(query_obj, fp)
-        click.echo("query dumped successfully")
+        click.echo(json.dumps(query_obj))
     else:
         click.echo(
             json.dumps(

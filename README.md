@@ -159,9 +159,9 @@ and
 
 Finally, if you want to inspect the query which the `searchable-files` command
 is generating instead of submitting it to the Search service, you can use
-`--dump-query` to write the query to a file, as in
+`--dump-query` to write the query to standard out, as in
 
-    ./searchable-files query "foo" --types=tar --dump-query test-query-1.json
+    ./searchable-files query "foo" --types=tar --dump-query
 
 ### Logout
 
