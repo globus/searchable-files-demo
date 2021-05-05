@@ -15,7 +15,7 @@ Parses file metadata and contents into chunks, labeled either as public or priva
 By default, this parses content in `data/files` and outputs to
 `output/extracted/`.
 
-- the **Assembler** (`sr/searchable_filesc/assembler.py`)
+- the **Assembler** (`src/searchable_files/assembler.py`)
 
 Given the parsed data, combine it with extra information about visibility
 to produce ingest documents for Globus Search. An ingest document is data
@@ -23,7 +23,7 @@ formatted for submission to Globus Search, containing searchable data and
 visibility information for who is allowed to search on and view different parts
 of the data.
 
-The visiibility data and additional annotations used to augment the data from
+The visibility data and additional annotations used to augment the data from
 the Extractor is loaded from configuration data. By default, this is
 `data/config/assembler.yaml`.
 
