@@ -2,7 +2,7 @@ import time
 
 import click
 
-from ._common import common_options, search_client
+from .lib import common_options, search_client
 
 
 def wait(client, task_id, max_wait):
@@ -20,10 +20,10 @@ def wait(client, task_id, max_wait):
 
 @click.command(
     "watch",
-    short_help="Wait for tasks to complete",
-    help="Wait for tasks to complete, and print information about the "
-    "number which succeed or fail. If a task takes too long, it is treated "
-    "as a failure.",
+    help="Wait for Tasks to complete.\n"
+    "Wait for Tasks whose IDs are listed in the task ID file to complete, and "
+    "print information about the number which succeed or fail. If a task takes too "
+    "long, it is treated as a failure.",
 )
 @click.option(
     "--task-id-file",

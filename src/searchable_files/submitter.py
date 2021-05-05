@@ -3,7 +3,7 @@ import os
 
 import click
 
-from ._common import all_filenames, common_options, search_client, token_storage_adapter
+from .lib import all_filenames, common_options, search_client, token_storage_adapter
 
 
 def submit_doc(client, index_id, filename, task_list_file):
@@ -16,8 +16,8 @@ def submit_doc(client, index_id, filename, task_list_file):
 
 @click.command(
     "submit",
-    short_help="Submit Ingest documents as new Tasks",
-    help="Reading Ingest documents produced by the Assembler, submit them "
+    help="Submit Ingest documents as new Tasks.\n"
+    "Reading Ingest documents produced by the Assembler, submit them "
     "each as a new Task and log their task IDs. "
     "These tasks can then be monitored with the `watch` command.",
 )

@@ -5,7 +5,7 @@ import shutil
 import click
 import ruamel.yaml
 
-from ._common import all_filenames, auth_client, common_options
+from .lib import all_filenames, auth_client, common_options
 
 yaml = ruamel.yaml.YAML(typ="safe")
 
@@ -97,8 +97,8 @@ def _load_settings_callback(ctx, param, value):
 
 @click.command(
     "assemble",
-    short_help="Annotate data and prepare it for ingest",
-    help="Given data from the Extractor, notate it and convert it into "
+    help="Annotate data and prepare it for ingest.\n"
+    "Given data from the Extractor, notate it and convert it into "
     "Ingest format. This will pull in data from the assembler configuration "
     "and use it to populate `visible_to` (see docs.globus.org/api/search for "
     "details on `visible_to`) and add fields to documents.",

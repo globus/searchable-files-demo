@@ -1,6 +1,6 @@
 install: .venv
-	.venv/bin/python setup.py develop
-	-rm searchable-files
+	.venv/bin/python setup.py -q develop
+	rm -f searchable-files
 	ln -s ".venv/bin/searchable-files" searchable-files
 
 lint:
@@ -8,11 +8,11 @@ lint:
 
 .venv:
 	virtualenv --python=python3 .venv
-	.venv/bin/python -m pip install -U pip setuptools
+	.venv/bin/python -m pip install -q -U pip setuptools
 
 clean:
 	find -name '*.pyc' -delete
-	-rm searchable-files
-	-rm -r .venv
-	-rm -r dist
-	-rm -r *.egg-info
+	rm -f searchable-files
+	rm -rf .venv
+	rm -rf dist
+	rm -rf src/*.egg-info

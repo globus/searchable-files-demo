@@ -9,7 +9,7 @@ import click
 import ruamel.yaml
 from identify import identify
 
-from ._common import all_filenames, common_options
+from .lib import all_filenames, common_options
 
 yaml = ruamel.yaml.YAML(typ="safe")
 
@@ -81,8 +81,8 @@ def _load_settings_callback(ctx, param, value):
 
 @click.command(
     "extract",
-    short_help="Extract metadata from a directory",
-    help="Extract per-file metadata from a directory of files. "
+    help="Extract metadata from a directory.\n"
+    "This command creates per-file metadata from a directory of files. "
     "Stat data like mode and mtime, the first 100 characters, and the "
     "detected filetype are all used",
 )
