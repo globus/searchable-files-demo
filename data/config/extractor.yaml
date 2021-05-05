@@ -1,8 +1,12 @@
 ---
 # Extractor Settings
 
-# which files should have the first 100 characters of data read?
+# this data pertains to reading the first N characters of a file and storing it
+# as part of the `head_and_mode` part of a document
 read_head:
+  # read 1000 characters
+  length: 1000
+
   # these filename patterns are handled
   # any other files will have
   #   head: null
@@ -14,3 +18,4 @@ read_head:
     - "*.sh"
     - "*.xml"
     - "*.json"
+    - "*/README"

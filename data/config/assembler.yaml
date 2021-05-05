@@ -11,6 +11,14 @@ file_specific_annotations:
   dir1/globus-logo.png:
     is_globus_related: true
     is_curated_data: true
+  "gutenberg/fiction/*":
+    is_curated_data: true
+    genre: fiction
+  "gutenberg/nonfiction/*":
+    is_curated_data: true
+    genre: nonfiction
+  gutenberg/nonfiction/a_modest_proposal.txt:
+    genre: satire
 
 # visibility information can be added to specific fields or entire files
 #

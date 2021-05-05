@@ -45,7 +45,7 @@ def read_head(filename, settings):
     # if the file is encoded in utf-8, for example, 100 characters could be 400
     # bytes
     with open(filename) as fp:
-        return fp.read(100)
+        return fp.read(settings.head_length)
 
 
 def filename2dict(filename, settings):
@@ -70,6 +70,7 @@ class Settings:
         self.read_head = settingsdict.get("read_head", {})
         if "files" not in self.read_head:
             self.read_head["files"] = []
+        self.head_length = int(self.read_head["length"])
 
 
 def _load_settings_callback(ctx, param, value):

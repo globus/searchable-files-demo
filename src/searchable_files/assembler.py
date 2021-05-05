@@ -1,3 +1,4 @@
+import fnmatch
 import json
 import os
 import shutil
@@ -29,6 +30,16 @@ def _render_visibility(value, listify=True):
     return [ret]
 
 
+def _add_annotations(data, annotations):
+    for k, v in annotations.items():
+        if k not in data:
+            data[k] = v
+        else:
+            if not isinstance(data[k], list):
+                data[k] = [data[k]]
+            data[k].append(v)
+
+
 def build_entries(datafile, settings):
     # read data
     with open(datafile) as fp:
@@ -37,8 +48,9 @@ def build_entries(datafile, settings):
     full_filename = data["relpath"]
 
     # if there are annotations to add, do so
-    if full_filename in settings.file_specific_annotations:
-        data.update(settings.file_specific_annotations[full_filename])
+    for pattern, annotations in settings.file_specific_annotations.items():
+        if fnmatch.fnmatch(full_filename, pattern):
+            _add_annotations(data, annotations)
 
     non_default_entries, non_default_fields = [], []
     for part in settings.doc_parts:
