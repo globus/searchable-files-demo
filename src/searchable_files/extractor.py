@@ -1,7 +1,6 @@
 import datetime
 import fnmatch
 import hashlib
-import json
 import os
 import shutil
 
@@ -9,7 +8,7 @@ import click
 import ruamel.yaml
 from identify import identify
 
-from .lib import all_filenames, common_options
+from .lib import all_filenames, common_options, prettyprint_json
 
 yaml = ruamel.yaml.YAML(typ="safe")
 
@@ -128,7 +127,7 @@ def extract_cli(settings, directory, output, clean):
     os.chdir(old_cwd)
     for filename, data in rendered_data.items():
         with open(target_file(output, filename), "w") as fp:
-            json.dump(data, fp)
+            prettyprint_json(data, fp)
 
     click.echo("metadata extraction complete")
     click.echo(f"results visible in\n  {output}")

@@ -1,9 +1,7 @@
-import json
-
 import click
 import globus_sdk
 
-from .lib import common_options, search_client, token_storage_adapter
+from .lib import common_options, prettyprint_json, search_client, token_storage_adapter
 
 
 @click.command(
@@ -82,12 +80,6 @@ def query_cli(
         query_obj.add_filter("extension", extensions.split(","), type="match_any")
 
     if dump_query:
-        click.echo(json.dumps(query_obj))
+        click.echo(prettyprint_json(query_obj))
     else:
-        click.echo(
-            json.dumps(
-                client.post_search(index_id, query_obj).data,
-                indent=2,
-                separators=(",", ": "),
-            )
-        )
+        click.echo(prettyprint_json(client.post_search(index_id, query_obj).data))

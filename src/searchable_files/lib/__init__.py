@@ -1,3 +1,4 @@
+import json
 import os
 
 import click
@@ -19,10 +20,17 @@ def all_filenames(directory):
             yield os.path.relpath(os.path.join(dirpath, f))
 
 
+def prettyprint_json(obj, fp=None):
+    if fp:
+        return json.dump(obj, fp, indent=2, separators=(",", ": "))
+    return json.dumps(obj, indent=2, separators=(",", ": "))
+
+
 __all__ = (
     "APP_SCOPES",
     "common_options",
     "all_filenames",
+    "prettyprint_json",
     "token_storage_adapter",
     "internal_auth_client",
     "auth_client",

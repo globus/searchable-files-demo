@@ -1,8 +1,12 @@
-import json
-
 import click
 
-from .lib import auth_client, common_options, search_client, token_storage_adapter
+from .lib import (
+    auth_client,
+    common_options,
+    prettyprint_json,
+    search_client,
+    token_storage_adapter,
+)
 
 
 @click.command(
@@ -51,4 +55,4 @@ def show_index():
     index_id = index_info["index_id"]
 
     res = client.get(f"/v1/index/{index_id}")
-    click.echo(json.dumps(res.data, indent=2, separators=(",", ": ")))
+    click.echo(prettyprint_json(res.data, indent=2, separators=(",", ": ")))

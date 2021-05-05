@@ -5,7 +5,7 @@ import shutil
 import click
 import ruamel.yaml
 
-from .lib import all_filenames, auth_client, common_options
+from .lib import all_filenames, auth_client, common_options, prettyprint_json
 
 yaml = ruamel.yaml.YAML(typ="safe")
 
@@ -73,7 +73,7 @@ def flush_batch(entry_batch, docid, output_directory):
     os.makedirs(output_directory, exist_ok=True)
     fname = os.path.join(output_directory, f"ingest_doc_{docid}.json")
     with open(fname, "w") as fp:
-        json.dump(
+        prettyprint_json(
             {"ingest_type": "GMetaList", "ingest_data": {"gmeta": entry_batch}}, fp
         )
 
