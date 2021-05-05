@@ -114,6 +114,11 @@ usage.
 The order of these commands matters, as each command's output is the input to
 the next command.
 
+The entire workflow can run in one line by simply running each command
+back-to-back, thusly:
+
+    ./searchable-files extract && ./searchable-files assemble && ./searchable-files submit && ./searchable-files watch
+
 ### Querying Results
 
 The `searchable-files` tool includes a query command which you can use to

@@ -2,6 +2,7 @@ import datetime
 import fnmatch
 import hashlib
 import os
+import re
 import shutil
 
 import click
@@ -41,11 +42,21 @@ def read_head(filename, settings):
     if not match:
         return None
 
-    # note, this is not necessarily 100 bytes
-    # if the file is encoded in utf-8, for example, 100 characters could be 400
-    # bytes
+    # read 2x the desired length of data (to handle preamble matches below)
+    #
+    # note that this is not necessarily 'head_length' bytes
+    # e.g. if the file is encoded in utf-8, 1 character can be up to 4 bytes
     with open(filename) as fp:
-        return fp.read(settings.head_length)
+        data = fp.read(settings.head_length * 2)
+    # once the data is read, check it against any skip_preamble_patterns to see
+    # if there is a match
+    # and if so, take data starting after that match
+    for pattern in settings.skip_preamble_patterns:
+        match = pattern.search(data)
+        if match:
+            return data[match.end() :][: settings.head_length]
+    # if there was no match, truncate down to the correct length
+    return data[: settings.head_length]
 
 
 def filename2dict(filename, settings):
@@ -71,6 +82,8 @@ class Settings:
         if "files" not in self.read_head:
             self.read_head["files"] = []
         self.head_length = int(self.read_head["length"])
+        patterns = self.read_head.get("skip_preamble_patterns", [])
+        self.skip_preamble_patterns = [re.compile(p) for p in patterns]
 
 
 def _load_settings_callback(ctx, param, value):

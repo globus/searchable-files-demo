@@ -19,3 +19,10 @@ read_head:
     - "*.xml"
     - "*.json"
     - "*/README"
+
+  # identify files which have a common preamble which should be skipped when
+  # reading the head
+  # if this pattern is found, then the text is taken starting
+  # after that preamble
+  skip_preamble_patterns:
+    - '\*\*\* START OF THE PROJECT GUTENBERG EBOOK .* \*\*\*\n+'
