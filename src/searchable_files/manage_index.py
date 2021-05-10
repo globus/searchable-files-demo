@@ -55,4 +55,25 @@ def show_index():
     index_id = index_info["index_id"]
 
     res = client.get(f"/v1/index/{index_id}")
-    click.echo(prettyprint_json(res.data, indent=2, separators=(",", ": ")))
+    click.echo(prettyprint_json(res.data))
+
+
+@click.command(
+    "set-index",
+    help="Set the Index for Searchable Files.\n"
+    "If an index has already been created, either via a previous use of "
+    "`create-index` or by another means, this command allows you to set the "
+    "default index for commands like `submit` and `query`.",
+)
+@common_options
+@click.argument("INDEX_ID", type=click.UUID)
+def set_index(index_id):
+    adapter = token_storage_adapter()
+    adapter.store_config("index_info", {"index_id": str(index_id)})
+    click.echo(f"successfully updated configured index, id='{index_id}'")
+
+
+def add_commands(group):
+    group.add_command(create_index)
+    group.add_command(show_index)
+    group.add_command(set_index)
