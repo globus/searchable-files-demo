@@ -57,6 +57,23 @@ Searchable Files app:
 - pip
 - make
 
+## Download
+
+To grab the latest version of the app, use any of the following commands:
+
+    # curl with unzip
+    curl -Ls https://github.com/globus/searchable-files-demo/archive/refs/heads/main.zip -o searchable-files-demo.zip
+    unzip searchable-files-demo.zip
+    # curl with tar
+    curl -Ls https://github.com/globus/searchable-files-demo/archive/refs/heads/main.tar.gz -o searchable-files-demo.tar.gz
+    tar -xzf searchable-files-demo.tar.gz
+    # git (https)
+    git clone https://github.com/globus/searchable-files-demo.git
+    # git (ssh)
+    git clone git@github.com:globus/searchable-files-demo.git
+    # github CLI
+    gh repo clone globus/searchable-files-demo
+
 ## Installation
 
 Run
