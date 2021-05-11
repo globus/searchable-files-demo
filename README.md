@@ -1,12 +1,12 @@
 # Searchable Files (demo)
 
 This demo application shows how Globus Search can be used to build an index of
-files. Similar to the `find` command, it lets you search for files
-in a directory based on simple criteria. Unlike `find`, however, the user
-searching the files does not need shell access to the server where files are
-stored.
+file metadata. Similar to the unix `find` command, it lets you search for files
+in a directory.
+Unlike `find`, however, the user searching the files does not need shell access
+to the server where files are stored.
 
-Searchable Files is broken up into four main components:
+The demo app is broken up into four main components:
 
 - the **Extractor** (`src/searchable_files/extractor.py`)
 
@@ -17,35 +17,33 @@ By default, this parses content in `data/files` and outputs to
 
 - the **Assembler** (`src/searchable_files/assembler.py`)
 
-Given the parsed data, combine it with extra information about visibility
+Combines the output of the Extractor with visibility information
 to produce ingest documents for Globus Search. An ingest document is data
 formatted for submission to Globus Search, containing searchable data and
 visibility information for who is allowed to search on and view different parts
 of the data.
 
-The visibility data and additional annotations used to augment the data from
-the Extractor is loaded from configuration data. By default, this is
+The visibility information and additional annotations used to augment the data from
+the Extractor is loaded from configuration, located by default in
 `data/config/assembler.yaml`.
 
-By default, this reads data from `output/extracted/`, and outputs to
+By default, the Assembler reads data from `output/extracted/` and outputs to
 `output/assembled/`.
 
 - the **Submitter** (`src/searchable_files/submit.py`)
 
-Given a set of ingest documents, valid for Globus Search, this sends the data
-to the Search service.
+The Submitter sends ingest documents to the Search service.
 
-By default, this reads data from `output/assembled/` and writes information to
-`output/task_submit/`.
+By default, the Submitter reads data from `output/assembled/` and writes
+information to `output/task_submit/`.
 
 - the **Watcher** (`src/searchable_files/watcher.py`)
 
-Given a set of tasks in Globus Search, this monitors those tasks and waits for
-completion or failure.
+The Watcher monitors tasks in Globus Search and waits for completion or failure.
 
-By default, this reads task IDs from `output/task_submit/` and monitors those
-tasks to ensure they succeeded. It outputs the number of passing and failing
-tasks (or only success if no tasks fail) and shows a progress bar.
+By default, the Watcher reads task IDs from `output/task_submit/` and outputs to
+standard output the number of passing and failing
+tasks (or only success if no tasks fail).
 
 ## Prerequisites
 
@@ -75,13 +73,9 @@ This will create a virtualenv and install the necessary dependencies.
 
 It will also create a script named `searchable-files`.
 
-## Usage
-
-After installation, you can use the `searchable-files` script.
-
 > **WARNING**: Always run `searchable-files` from the top level of the
-> repository, unless you pass additional options. Its defaults are all written
-> as relative paths with respect to this directory.
+> repository, unless you pass additional options. The script's defaults are all
+> written as relative paths with respect to this directory.
 
 ### Setup
 
@@ -96,22 +90,17 @@ After login, run
 
     ./searchable-files create-index
 
-This will create a new index for you to use Searchable Files.
+This will create a new index for you to use with the Searchable Files demo app.
 Its index ID will be stored in `~/.globus_searchable_files.db`.
 
-Running `./searchable-files create-index` a second time will print a message
-stating that the index already exists and giving you the index ID.
-
-You can also run
+To retrieve the index ID and other index information, run
 
     ./searchable-files show-index
 
-to get info about your index.
-
 ### Running the Workflow
 
-Each component of the Searchable Files App is run with a separate
-subcommand, and each one supports a `--help` option for full details on its
+Each component of the Searchable Files app is run with a separate
+subcommand. Each supports a `--help` option for full details on its
 usage.
 
     ./searchable-files extract --help
@@ -129,8 +118,9 @@ back-to-back, thusly:
 
 ### Querying Results
 
-The `searchable-files` tool includes a query command which you can use to
-search your files.
+The Searchable Files demo app includes a query command which you can use to
+search your files. Search results will be output in the JSON format produced by
+the Globus Search service.
 
 See
 
@@ -138,7 +128,7 @@ See
 
 for more details.
 
-You can filter in various ways using this. For example
+You can filter your search results. For example
 
     ./searchable-files query "foo" --types-or=text,png
 
@@ -148,30 +138,29 @@ have either the `txt` or `png` type.
 
     ./searchable-files query "foo" --types=text,non-executable
 
-will find results which are both text files and not executable.
+will filter results to text files that are not executable.
 
-#### Testing Unauthenticated Queries
+#### Making Unauthenticated Queries
 
-By default, queries are made authenticated as the logged-in user. For
-comparison, the query command supports a `--no-auth` flag, which will make the
-query submitted unauthenticated.
+By default, queries are submitted as the logged-in user.
+The query command supports a `--no-auth` flag, which will submit the
+query without any credentials.
 
-This will result in any results which are only visible due to `visible_to`
-filtering disappearing from the results. Only "public" results will remain
-visible.
+Unauthenticated queries return only results for which which the `visible_to`
+field is set to `public`.
 
-On the example data, you should see a difference between
+Using the example data, you should see a different result set between
 
-    ./searchable-files '*' --extensions=sh
+    ./searchable-files query '*' --extensions=sh
 
 and
 
-    ./searchable-files '*' --extensions=sh --no-auth
+    ./searchable-files query '*' --extensions=sh --no-auth
 
 #### Dumping the Query
 
-Finally, if you want to inspect the query which the `searchable-files` command
-is generating instead of submitting it to the Search service, you can use
+If you want to inspect the query which the `searchable-files` command
+is generating instead of submitting the query, you can use
 `--dump-query` to write the query to standard out, as in
 
     ./searchable-files query "foo" --types=tar --dump-query
@@ -182,15 +171,15 @@ When you are done with the demo, you can log out with
 
     ./searchable-files logout
 
-Please note that this will not delete your index and it will still be available
+Please note that this will not delete your index. The index will still be available
 and searchable.
 
 ## Next Steps
 
-For a fully featured Search client, you may want to install and explore the
+For a fully featured Globus Search client, you may want to install and explore the
 [`globus-search-cli`](https://globus-search-cli.readthedocs.io/en/latest/overview.html).
 
-You can also write your own python clients against the Globus Search service by
+You can also write your own python clients against the Search service by
 using the
 [`SearchClient` class from the Globus SDK](https://globus-sdk-python.readthedocs.io/en/stable/clients/search.html).
 
@@ -239,7 +228,7 @@ may want to modify them to alter their outputs, combine them into a single
 command, or make other minor changes, their main logic should probably be
 left unmodified.
 
-The only special consideration when modifying these components is that the use
-the Index ID retrieved from `create-index`. If modifying or replacing these
-commands, it may be necessary to replace the logic which loads the `index_id`
-from storage.
+The only special consideration when modifying these components is that these
+commands use the Index ID retrieved from `create-index`. If modifying or
+replacing these commands, it may be necessary to replace the logic that
+loads the `index_id` from storage.
