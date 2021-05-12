@@ -6,6 +6,17 @@ in a directory.
 Unlike `find`, however, the user searching the files does not need shell access
 to the server where files are stored.
 
+## Companion Doc
+
+Globus provides a
+[companion doc](https://docs.globus.org/api/search/guides/searchable_files/)
+which expands upon the content in this demo.
+
+The doc covers some of the motivation and background for this app, as well as
+some ideas about ways in which the demo can be adapted or extended.
+
+## Architecture
+
 The demo app is broken up into four main components:
 
 - the **Extractor** (`src/searchable_files/extractor.py`)
