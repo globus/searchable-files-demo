@@ -21,7 +21,8 @@ The demo app is broken up into four main components:
 
 - the **Extractor** (`src/searchable_files/extractor.py`)
 
-Parses file metadata and contents into chunks, labeled either as public or private.
+Parses file metadata and contents into chunks, and formats that data into JSON
+files.
 
 By default, this parses content in `data/files` and outputs to
 `output/extracted/`.
