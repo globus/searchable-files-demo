@@ -11,7 +11,7 @@ lint:
 	.venv/bin/python -m pip install -q -U pip setuptools
 
 clean:
-	find -name '*.pyc' -delete
+	find . -name '*.pyc' -delete
 	rm -f searchable-files
 	rm -rf .venv
 	rm -rf dist
