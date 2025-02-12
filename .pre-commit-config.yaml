@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks.git
-  rev: v4.4.0
+  rev: v5.0.0
   hooks:
     - id: check-merge-conflict
     - id: trailing-whitespace
@@ -8,26 +8,26 @@ repos:
     - id: pretty-format-json
       args: ["--autofix", "--no-sort-keys"]
 - repo: https://github.com/PyCQA/flake8
-  rev: 6.0.0
+  rev: 7.1.1
   hooks:
     - id: flake8
       types: [python]
       language_version: python3
       additional_dependencies: ['flake8-bugbear==21.3.1']
 - repo: https://github.com/psf/black
-  rev: 22.12.0
+  rev: 25.1.0
   hooks:
     - id: black
       types: [python]
       language_version: python3
 - repo: https://github.com/PyCQA/isort
-  rev: 5.12.0
+  rev: 6.0.0
   hooks:
     - id: isort
       types: [python]
       language_version: python3
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.3.1
+  rev: v3.19.1
   hooks:
     - id: pyupgrade
       args: ["--py36-plus"]
