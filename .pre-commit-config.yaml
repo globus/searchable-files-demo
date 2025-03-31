@@ -8,7 +8,7 @@ repos:
     - id: pretty-format-json
       args: ["--autofix", "--no-sort-keys"]
 - repo: https://github.com/PyCQA/flake8
-  rev: 7.1.1
+  rev: 7.2.0
   hooks:
     - id: flake8
       types: [python]
@@ -21,7 +21,7 @@ repos:
       types: [python]
       language_version: python3
 - repo: https://github.com/PyCQA/isort
-  rev: 6.0.0
+  rev: 6.0.1
   hooks:
     - id: isort
       types: [python]
