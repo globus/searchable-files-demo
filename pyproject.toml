@@ -13,9 +13,9 @@ authors = [
   { name = "Stephen Rosen", email = "sirosen@globus.org" },
 ]
 dependencies = [
-    "click<8",
+    "click>=8,<9",
     "globus-sdk>=3,<4",
-    "ruamel.yaml==0.17.4",
+    "ruamel.yaml>=0.18.10,<0.19",
     "identify<2.0",
 ]
 
@@ -27,3 +27,15 @@ source = "https://github.com/globus/searchable-files-demo"
 
 [tool.isort]
 profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.tox]
+requires = ["tox>=4.22"]
+env_list = ["mypy"]
+
+[tool.tox.env.mypy]
+description = "run mypy to type-check code"
+deps = ["mypy"]
+commands = [["mypy", {replace = "posargs", default = ["src/"], extend = true}]]
