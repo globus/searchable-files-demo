@@ -16,30 +16,38 @@ def submit_doc(client, index_id, filename, task_list_file):
 
 @click.command(
     "submit",
-    help="Submit Ingest documents as new Tasks.\n"
-    "Reading Ingest documents produced by the Assembler, submit them "
-    "each as a new Task and log their task IDs. "
-    "These tasks can then be monitored with the `watch` command.",
+    help=(
+        "Submit Ingest documents as new Tasks.\n"
+        "Reading Ingest documents produced by the Assembler, submit them "
+        "each as a new Task and log their task IDs. "
+        "These tasks can then be monitored with the `watch` command."
+    ),
 )
 @click.option(
     "--directory",
     default="output/assembled",
     show_default=True,
-    help="A path, relative to the current working directory, "
-    "containing ingest documents to submit",
+    help=(
+        "A path, relative to the current working directory, "
+        "containing ingest documents to submit"
+    ),
 )
 @click.option(
     "--output",
     default="output/task_submit",
     show_default=True,
-    help="A directory relative to the current working directory, "
-    "where the resulting task IDs be written",
+    help=(
+        "A directory relative to the current working directory, "
+        "where the resulting task IDs be written"
+    ),
 )
 @click.option(
     "--index-id",
     default=None,
-    help="Override the index ID where the tasks should be submitted. "
-    "If omitted, the index created with `create-index` will be used.",
+    help=(
+        "Override the index ID where the tasks should be submitted. "
+        "If omitted, the index created with `create-index` will be used."
+    ),
 )
 @common_options
 def submit_cli(directory, output, index_id):

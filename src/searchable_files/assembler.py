@@ -91,7 +91,7 @@ def flush_batch(entry_batch, docid, output_directory):
 
 
 class Settings:
-    def __init__(self, data):
+    def __init__(self, data) -> None:
         self.max_batch_size = data.get("max_batch_size", 100)
         self.file_specific_annotations = data.get("file_specific_annotations", {})
 
@@ -109,18 +109,22 @@ def _load_settings_callback(ctx, param, value):
 
 @click.command(
     "assemble",
-    help="Annotate data and prepare it for ingest.\n"
-    "Given data from the Extractor, notate it and convert it into "
-    "Ingest format. This will pull in data from the assembler configuration "
-    "and use it to populate `visible_to` (see docs.globus.org/api/search for "
-    "details on `visible_to`) and add fields to documents.",
+    help=(
+        "Annotate data and prepare it for ingest.\n"
+        "Given data from the Extractor, notate it and convert it into "
+        "Ingest format. This will pull in data from the assembler configuration "
+        "and use it to populate `visible_to` (see docs.globus.org/api/search for "
+        "details on `visible_to`) and add fields to documents."
+    ),
 )
 @click.option(
     "--directory",
     default="output/extracted",
     show_default=True,
-    help="A path, relative to the current working directory, "
-    "containing extracted metadata for processing",
+    help=(
+        "A path, relative to the current working directory, "
+        "containing extracted metadata for processing"
+    ),
 )
 @click.option(
     "--clean",
@@ -132,8 +136,10 @@ def _load_settings_callback(ctx, param, value):
     "--output",
     default="output/assembled",
     show_default=True,
-    help="A path, relative to the current working directory, "
-    "where the assembled metadata should be written",
+    help=(
+        "A path, relative to the current working directory, "
+        "where the assembled metadata should be written"
+    ),
 )
 @click.option(
     "--settings",

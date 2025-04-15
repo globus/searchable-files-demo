@@ -11,9 +11,11 @@ from .lib import (
 
 @click.command(
     "create-index",
-    help="Create the Index for Searchable Files.\n"
-    "The index will be owned by the current user and will have an "
-    "automatically chosen name and description.",
+    help=(
+        "Create the Index for Searchable Files.\n"
+        "The index will be owned by the current user and will have an "
+        "automatically chosen name and description."
+    ),
 )
 @common_options
 def create_index():
@@ -26,8 +28,10 @@ def create_index():
         "/beta/index",
         {
             "display_name": "Searchable Files Demo Index",
-            "description": "An index created for use with the Searchable Files Demo App. "
-            f"Created by {username}",
+            "description": (
+                "An index created for use with the Searchable Files Demo App. "
+                f"Created by {username}"
+            ),
         },
     )
     index_id = res["id"]
@@ -39,10 +43,12 @@ def create_index():
 
 @click.command(
     "show-index",
-    help="Show index info.\n"
-    "Detailed info about the Searchable Files index. "
-    "Must run after create-index.\n"
-    "The data is verbatim output from the Globus Search API.",
+    help=(
+        "Show index info.\n"
+        "Detailed info about the Searchable Files index. "
+        "Must run after create-index.\n"
+        "The data is verbatim output from the Globus Search API."
+    ),
 )
 @common_options
 def show_index():
@@ -60,10 +66,12 @@ def show_index():
 
 @click.command(
     "set-index",
-    help="Set the Index for Searchable Files.\n"
-    "If an index has already been created, either via a previous use of "
-    "`create-index` or by another means, this command allows you to set the "
-    "default index for commands like `submit` and `query`.",
+    help=(
+        "Set the Index for Searchable Files.\n"
+        "If an index has already been created, either via a previous use of "
+        "`create-index` or by another means, this command allows you to set the "
+        "default index for commands like `submit` and `query`."
+    ),
 )
 @common_options
 @click.argument("INDEX_ID", type=click.UUID)
