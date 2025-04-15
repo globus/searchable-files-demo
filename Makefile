@@ -1,5 +1,5 @@
 install: .venv
-	.venv/bin/python setup.py -q develop
+	.venv/bin/python -m pip install .
 	rm -f searchable-files
 	ln -s ".venv/bin/searchable-files" searchable-files
 
