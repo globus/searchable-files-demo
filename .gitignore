@@ -1,5 +1,7 @@
 # the output dir is all ephemeral
 /output/
+# the default index_info file is also ephemeral
+/data/index_info.json
 
 # python and setup related files
 *.pyc

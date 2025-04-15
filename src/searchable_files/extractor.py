@@ -77,7 +77,7 @@ def target_file(output_directory, filename):
 
 
 class Settings:
-    def __init__(self, settingsdict):
+    def __init__(self, settingsdict) -> None:
         self.read_head = settingsdict.get("read_head", {})
         if "files" not in self.read_head:
             self.read_head["files"] = []
@@ -94,17 +94,21 @@ def _load_settings_callback(ctx, param, value):
 
 @click.command(
     "extract",
-    help="Extract metadata from a directory.\n"
-    "This command creates per-file metadata from a directory of files. "
-    "Stat data like mode and mtime, the first 100 characters, and the "
-    "detected filetype are all used",
+    help=(
+        "Extract metadata from a directory.\n"
+        "This command creates per-file metadata from a directory of files. "
+        "Stat data like mode and mtime, the first 100 characters, and the "
+        "detected filetype are all used"
+    ),
 )
 @click.option(
     "--directory",
     default="data/files",
     show_default=True,
-    help="A path, relative to the current working directory, "
-    "containing data files from which to extract metadata",
+    help=(
+        "A path, relative to the current working directory, "
+        "containing data files from which to extract metadata"
+    ),
 )
 @click.option(
     "--clean",
@@ -116,8 +120,10 @@ def _load_settings_callback(ctx, param, value):
     "--output",
     default="output/extracted",
     show_default=True,
-    help="A path, relative to the current working directory, "
-    "where the extracted metadata should be written",
+    help=(
+        "A path, relative to the current working directory, "
+        "where the extracted metadata should be written"
+    ),
 )
 @click.option(
     "--settings",
