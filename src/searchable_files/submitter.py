@@ -3,13 +3,13 @@ import os
 
 import click
 
-from .lib import all_filenames, common_options, search_client, token_storage_adapter
+from .lib import SEARCH_CLIENT, all_filenames, common_options
 
 
-def submit_doc(client, index_id, filename, task_list_file):
+def submit_doc(index_id, filename, task_list_file):
     with open(filename) as fp:
         data = json.load(fp)
-    res = client.ingest(index_id, data)
+    res = SEARCH_CLIENT.ingest(index_id, data)
     with open(task_list_file, "a") as fp:
         fp.write(res["task_id"] + "\n")
 
@@ -21,6 +21,15 @@ def submit_doc(client, index_id, filename, task_list_file):
         "Reading Ingest documents produced by the Assembler, submit them "
         "each as a new Task and log their task IDs. "
         "These tasks can then be monitored with the `watch` command."
+    ),
+)
+@click.option(
+    "--index-info-file",
+    default="data/index_info.json",
+    show_default=True,
+    help=(
+        "A path, relative to the current working directory, "
+        "containing where the index information is stored"
     ),
 )
 @click.option(
@@ -50,25 +59,25 @@ def submit_doc(client, index_id, filename, task_list_file):
     ),
 )
 @common_options
-def submit_cli(directory, output, index_id):
-    client = search_client()
-
+def submit_cli(index_info_file, directory, output, index_id):
     os.makedirs(output, exist_ok=True)
     task_list_file = os.path.join(output, "tasks.txt")
     with open(task_list_file, "w"):  # empty the file (open in write mode)
         pass
 
     if not index_id:
-        index_info = token_storage_adapter().read_config("index_info")
-        if index_info is None:
+        try:
+            with open(index_info_file, "rb") as fp:
+                index_info = json.load(fp)
+        except FileNotFoundError as e:
             raise click.UsageError(
                 "Cannot submit without first setting up "
                 "an index or passing '--index-id'"
-            )
+            ) from e
         index_id = index_info["index_id"]
 
     for filename in all_filenames(directory):
-        submit_doc(client, index_id, filename, task_list_file)
+        submit_doc(index_id, filename, task_list_file)
 
     click.echo(
         f"""\

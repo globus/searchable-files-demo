@@ -1,11 +1,12 @@
+import json
+
 import click
 
 from .lib import (
-    auth_client,
+    AUTH_CLIENT,
+    SEARCH_CLIENT,
     common_options,
     prettyprint_json,
-    search_client,
-    token_storage_adapter,
 )
 
 
@@ -17,26 +18,30 @@ from .lib import (
         "automatically chosen name and description."
     ),
 )
+@click.option(
+    "--index-info-file",
+    default="data/index_info.json",
+    show_default=True,
+    help=(
+        "A path, relative to the current working directory, "
+        "containing where the index information will be stored"
+    ),
+)
 @common_options
-def create_index():
-    adapter = token_storage_adapter()
-    client = search_client()
-
-    userinfo = auth_client().oauth2_userinfo()
+def create_index(index_info_file):
+    userinfo = AUTH_CLIENT.oauth2_userinfo()
     username = userinfo["preferred_username"]
-    res = client.post(
-        "/beta/index",
-        {
-            "display_name": "Searchable Files Demo Index",
-            "description": (
-                "An index created for use with the Searchable Files Demo App. "
-                f"Created by {username}"
-            ),
-        },
+    res = SEARCH_CLIENT.create_index(
+        "Searchable Files Demo Index",
+        (
+            "An index created for use with the Searchable Files Demo App. "
+            f"Created by {username}"
+        ),
     )
     index_id = res["id"]
 
-    adapter.store_config("index_info", {"index_id": index_id})
+    with open(index_info_file, "w") as fp:
+        json.dump({"index_id": index_id}, fp)
 
     click.echo(f"successfully created index, id='{index_id}'")
 
@@ -50,17 +55,28 @@ def create_index():
         "The data is verbatim output from the Globus Search API."
     ),
 )
+@click.option(
+    "--index-info-file",
+    default="data/index_info.json",
+    show_default=True,
+    help=(
+        "A path, relative to the current working directory, "
+        "containing where the index information is stored"
+    ),
+)
 @common_options
-def show_index():
-    adapter = token_storage_adapter()
-    client = search_client()
+def show_index(index_info_file):
+    try:
+        with open(index_info_file, "rb") as fp:
+            index_info = json.load(fp)
+    except FileNotFoundError as e:
+        raise click.UsageError(
+            "You must create an index with `create-index` first!"
+        ) from e
 
-    index_info = adapter.read_config("index_info")
-    if not index_info:
-        raise click.UsageError("You must create an index with `create-index` first!")
     index_id = index_info["index_id"]
 
-    res = client.get(f"/v1/index/{index_id}")
+    res = SEARCH_CLIENT.get_index(index_id)
     click.echo(prettyprint_json(res.data))
 
 
@@ -73,11 +89,20 @@ def show_index():
         "default index for commands like `submit` and `query`."
     ),
 )
+@click.option(
+    "--index-info-file",
+    default="data/index_info.json",
+    show_default=True,
+    help=(
+        "A path, relative to the current working directory, "
+        "containing where the index information will be stored"
+    ),
+)
 @common_options
 @click.argument("INDEX_ID", type=click.UUID)
-def set_index(index_id):
-    adapter = token_storage_adapter()
-    adapter.store_config("index_info", {"index_id": str(index_id)})
+def set_index(index_id, index_info_file):
+    with open(index_info_file, "w") as fp:
+        json.dump({"index_id": str(index_id)}, fp)
     click.echo(f"successfully updated configured index, id='{index_id}'")
 
 

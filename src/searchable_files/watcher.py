@@ -2,13 +2,13 @@ import time
 
 import click
 
-from .lib import common_options, search_client
+from .lib import SEARCH_CLIENT, common_options
 
 
-def wait(client, task_id, max_wait):
+def wait(task_id, max_wait):
     waited = 0
     while True:
-        res = client.get_task(task_id)
+        res = SEARCH_CLIENT.get_task(task_id)
         if res["state"] in ("SUCCESS", "FAILED"):
             return res["state"] == "SUCCESS"
         # wait 1s and check for timeout
@@ -60,8 +60,6 @@ def wait(client, task_id, max_wait):
 )
 @common_options
 def watch_cli(task_id_file, output, max_wait, delay):
-    client = search_client()
-
     task_ids = set()
     with open(task_id_file) as fp:
         for line in fp:
@@ -72,7 +70,7 @@ def watch_cli(task_id_file, output, max_wait, delay):
     results = []
     with click.progressbar(task_ids) as bar:
         for task_id in bar:
-            results.append(wait(client, task_id, max_wait))
+            results.append(wait(task_id, max_wait))
             if delay is not None:
                 time.sleep(delay)
 

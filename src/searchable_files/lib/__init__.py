@@ -3,10 +3,7 @@ import os
 
 import click
 
-from .auth import auth_client, internal_auth_client, token_storage_adapter
-from .search import search_client
-
-APP_SCOPES = ["openid", "profile", "urn:globus:auth:scope:search.api.globus.org:all"]
+from .clients import APP, AUTH_CLIENT, SEARCH_CLIENT
 
 
 def common_options(f):
@@ -27,12 +24,10 @@ def prettyprint_json(obj, fp=None):
 
 
 __all__ = (
-    "APP_SCOPES",
     "common_options",
     "all_filenames",
     "prettyprint_json",
-    "token_storage_adapter",
-    "internal_auth_client",
-    "auth_client",
-    "search_client",
+    "APP",
+    "AUTH_CLIENT",
+    "SEARCH_CLIENT",
 )

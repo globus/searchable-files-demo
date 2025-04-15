@@ -6,14 +6,14 @@ import shutil
 import click
 import ruamel.yaml
 
-from .lib import all_filenames, auth_client, common_options, prettyprint_json
+from .lib import AUTH_CLIENT, all_filenames, common_options, prettyprint_json
 
 yaml = ruamel.yaml.YAML(typ="safe")
 
 
 def _current_user_as_urn():
     if not hasattr(_current_user_as_urn, "identity_id"):
-        _current_user_as_urn.identity_id = auth_client().oauth2_userinfo()["sub"]
+        _current_user_as_urn.identity_id = AUTH_CLIENT.oauth2_userinfo()["sub"]
     return f"urn:globus:auth:identity:{_current_user_as_urn.identity_id}"
 
 

@@ -1,7 +1,9 @@
+import json
+
 import click
 import globus_sdk
 
-from .lib import common_options, prettyprint_json, search_client, token_storage_adapter
+from .lib import SEARCH_CLIENT, common_options, prettyprint_json
 
 
 @click.command(
@@ -17,6 +19,15 @@ from .lib import common_options, prettyprint_json, search_client, token_storage_
 )
 @common_options
 @click.argument("QUERY_STRING")
+@click.option(
+    "--index-info-file",
+    default="data/index_info.json",
+    show_default=True,
+    help=(
+        "A path, relative to the current working directory, "
+        "containing where the index information is stored"
+    ),
+)
 @click.option(
     "--limit", type=int, help="Limit the number of results to return", default=5
 )
@@ -63,6 +74,7 @@ from .lib import common_options, prettyprint_json, search_client, token_storage_
 )
 def query_cli(
     query_string,
+    index_info_file,
     limit,
     offset,
     advanced,
@@ -72,11 +84,13 @@ def query_cli(
     no_auth,
     dump_query,
 ):
-    adapter = token_storage_adapter()
-    client = search_client(authenticated=not no_auth)
-    index_info = adapter.read_config("index_info")
-    if not index_info:
-        raise click.UsageError("You must create an index with `create-index` first!")
+    try:
+        with open(index_info_file, "rb") as fp:
+            index_info = json.load(fp)
+    except FileNotFoundError as e:
+        raise click.UsageError(
+            "You must create an index with `create-index` first!"
+        ) from e
     index_id = index_info["index_id"]
 
     query_obj = globus_sdk.SearchQuery(
@@ -92,4 +106,8 @@ def query_cli(
     if dump_query:
         click.echo(prettyprint_json(query_obj))
     else:
+        if no_auth:
+            client = globus_sdk.SearchClient()
+        else:
+            client = SEARCH_CLIENT
         click.echo(prettyprint_json(client.post_search(index_id, query_obj).data))

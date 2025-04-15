@@ -91,19 +91,12 @@ It will also create a script named `searchable-files`.
 
 ### Setup
 
-Before running any of the steps, you must run
-
-    ./searchable-files login
-
-This will log you in to Globus and write your credentials to
-`~/.globus_searchable_files.db`.
-
-After login, run
+Before running other steps, run
 
     ./searchable-files create-index
 
 This will create a new index for you to use with the Searchable Files demo app.
-Its index ID will be stored in `~/.globus_searchable_files.db`.
+Its index ID will be stored by default in `data/index_info.json`.
 
 To retrieve the index ID and other index information, run
 
@@ -206,10 +199,12 @@ customize or replace to meet your needs.
 
 #### Setup
 
-The `login` and `create-index` commands create and store data in a sqlite
-database at `~/.globus_searchable_files.db`.
-If you wish to use an alternative index ID, be aware that several commands
-rely on data stored in this database.
+The `login` and `create-index` commands create and store data in local files.
+If you wish to use an alternative index ID, use the `set-index` command.
+
+> [!NOTE]
+> Explicitly running `login` is optional. The application will automatically
+> log you in if you are not logged in.
 
 #### Extractor
 
