@@ -36,24 +36,20 @@ cli.add_command(query.query_cli)
 def login(force):
     # if not forcing, stop if user already logged in
     if not force and not APP.login_required():
-        click.echo(
-            """\
+        click.echo("""\
 You are already logged in!
 
 You may force a new login with
   searchable-files login --force
-"""
-        )
+""")
         return
 
     APP.login()
 
-    click.echo(
-        """\
+    click.echo("""\
 
 You have successfully logged in to Searchable Files
-"""
-    )
+""")
 
 
 @cli.command(
@@ -71,11 +67,9 @@ You have successfully logged in to Searchable Files
 @common_options
 def logout():
     APP.logout()
-    click.echo(
-        """\
+    click.echo("""\
 You are now successfully logged out of Searchable Files.
 You may also want to logout of any browser session you have with Globus:
 
   https://auth.globus.org/v2/web/logout
-"""
-    )
+""")

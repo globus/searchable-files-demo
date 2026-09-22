@@ -79,9 +79,7 @@ def submit_cli(index_info_file, directory, output, index_id):
     for filename in all_filenames(directory):
         submit_doc(index_id, filename, task_list_file)
 
-    click.echo(
-        f"""\
+    click.echo(f"""\
 ingest document submission (task submission) complete
 task IDs are visible in
-    {task_list_file}"""
-    )
+    {task_list_file}""")
